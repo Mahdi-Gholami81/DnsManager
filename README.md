@@ -5,7 +5,7 @@ A simple, menu-driven PowerShell tool to manage DNS settings on Windows — appl
 ---
 
 <p align="center">
-  <img src="./assets/demo.jpg" alt="DNS Manager Banner" width="100%">
+  <img src="./assets/demo.png" alt="DNS Manager Banner" width="100%">
 </p>
 
 ## ✨ Features
