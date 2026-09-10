@@ -22,8 +22,10 @@ A simple, menu-driven PowerShell tool to manage DNS settings on Windows — appl
 - **DNS Speed Test** – Measure the response latency of each DNS server (via `Resolve-DnsName`) and optionally apply the fastest one with a single confirmation.
 - **Live network status** – Shows adapter type, IPv4, gateway, and current DNS 1 / DNS 2 for every active adapter.
 - After any DNS change the network is refreshed automatically (DNS cache flush, `Dnscache` restart, IP release/renew) so the new settings actually take effect.
+- **Check for Updates** – Menu option **7** compares your `version.txt` against the latest GitHub Release and offers to open the release page.
+- **Auto-elevate** – Non-admin launches trigger a UAC prompt automatically.
 
-> ⚠️ **Administrator privileges required.** The script no longer auto-elevates (that opened a separate window). Run it from a terminal that is already launched **as Administrator**.
+> 🔐 **Administrator privileges required.** If you launch without elevation, the script re-launches itself via the Windows UAC dialog (click **Yes**). If you click **No**, it exits with a message.
 
 ---
 
@@ -60,6 +62,12 @@ Shecan=178.22.122.100,185.51.200.2
 - Windows 10 / 11
 - PowerShell 5.1+
 - Administrator privileges
+
+---
+
+## 📦 Releases
+
+Pushes to `main` run CI (syntax + PSScriptAnalyzer + version check). Pushing a tag `vX.Y.Z` builds `DnsManager-vX.Y.Z.zip` (script + ini + docs) and publishes a GitHub Release automatically.
 
 ---
 
