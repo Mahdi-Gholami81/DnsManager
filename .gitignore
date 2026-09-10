@@ -1,0 +1,14 @@
+# Superpowers agent scratch (ledger, briefs, review packages)
+.superpowers/
+
+# Local release dry-run artifacts (real releases are built by CI)
+stage/
+stage-test/
+DnsManager-v*.zip
+*-test.zip
+
+# Windows / editor noise
+Thumbs.db
+desktop.ini
+.vscode/
+*.swp

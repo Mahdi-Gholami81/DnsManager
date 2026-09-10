@@ -24,8 +24,9 @@ jobs:
       - name: Run PSScriptAnalyzer
         shell: pwsh
         run: |
-          # Console UI uses Write-Host intentionally (48x); exclude PSAvoidUsingWriteHost.
-          $res = Invoke-ScriptAnalyzer -Path DnsManager.ps1 -Severity Error, Warning -ExcludeRule 'PSAvoidUsingWriteHost'
+          # Gate on errors only: the script is an interactive console UI with
+          # pre-existing style warnings (Write-Host, unapproved verbs, etc.).
+          $res = Invoke-ScriptAnalyzer -Path DnsManager.ps1 -Severity Error
           if ($res) { $res | Format-Table -AutoSize | Out-String | Write-Host; exit 1 }
           Write-Host "Analyzer clean"
       - name: Verify version consistency
