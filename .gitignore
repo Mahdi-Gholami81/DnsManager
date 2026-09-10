@@ -1,6 +1,9 @@
 # Superpowers agent scratch (ledger, briefs, review packages)
 .superpowers/
 
+# Planning notes (spec/plan docs) — local only
+docs/
+
 # Local runtime state — created automatically next to the script on first run
 servers.ini
 
