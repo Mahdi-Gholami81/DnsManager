@@ -6,15 +6,26 @@ if (Test-Path $VersionFile) {
 }
 $RepoOwner = "mahdi-gholami81"
 $RepoName = "dns-manager"
-# Check for administrator privileges
+# Check for administrator privileges — auto-elevate via UAC
 if (-not ([Security.Principal.WindowsPrincipal] `
     [Security.Principal.WindowsIdentity]::GetCurrent() `
     ).IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)) {
-
-    Write-Host "This script needs Administrator privileges." -ForegroundColor Yellow
-    Write-Host "Please open your terminal as Administrator and run this script again."
-    Write-Host "(Right-click the terminal icon -> 'Run as Administrator')"
-    Pause
+    Write-Host "Requesting Administrator privileges (UAC dialog)..." -ForegroundColor Yellow
+    try {
+        $psi = $PSCommandPath
+        if ([string]::IsNullOrEmpty($psi)) { $psi = Join-Path $PSScriptRoot "DnsManager.ps1" }
+        $hostExe = "powershell.exe"
+        if ($PSVersionTable.PSEdition -eq "Core") {
+            $pwsh = (Get-Command pwsh -ErrorAction SilentlyContinue).Source
+            if ($pwsh) { $hostExe = $pwsh }
+        }
+        Start-Process -FilePath $hostExe -Verb RunAs -ArgumentList "-NoProfile -ExecutionPolicy Bypass -File `"$psi`""
+    }
+    catch {
+        Write-Host "Administrator privileges are required." -ForegroundColor Red
+        Write-Host "UAC was declined or elevation failed. Right-click terminal -> 'Run as Administrator' and retry." -ForegroundColor Yellow
+        Read-Host "Press Enter to continue..." | Out-Null
+    }
     exit
 }
 
