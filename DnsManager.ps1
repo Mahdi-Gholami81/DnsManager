@@ -1,3 +1,11 @@
+$ScriptVersion = "1.1.0"
+$VersionFile = Join-Path $PSScriptRoot "version.txt"
+if (Test-Path $VersionFile) {
+    $fileVer = (Get-Content $VersionFile -Raw).Trim()
+    if ($fileVer -match '^\d+\.\d+\.\d+$') { $ScriptVersion = $fileVer }
+}
+$RepoOwner = "mahdi-gholami81"
+$RepoName = "dns-manager"
 # Check for administrator privileges
 if (-not ([Security.Principal.WindowsPrincipal] `
     [Security.Principal.WindowsIdentity]::GetCurrent() `
@@ -627,7 +635,7 @@ function Show-DnsSpeedTest {
 # ────────────────────────────────────────────────────────────
 function Show-MainMenu {
     Clear-Host
-    Write-Banner -Title "DNS Manager"
+    Write-Banner -Title "DNS Manager v$ScriptVersion"
     Write-Host ""
     Show-CompactStatus
     Write-Host ""
