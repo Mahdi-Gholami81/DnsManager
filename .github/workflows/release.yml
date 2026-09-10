@@ -24,7 +24,8 @@ jobs:
         run: |
           $version = "${{ steps.ver.outputs.version }}"
           New-Item -ItemType Directory -Path stage -Force | Out-Null
-          Copy-Item DnsManager.ps1, servers.ini, README.md, LICENSE, version.txt -Destination stage/
+          Copy-Item DnsManager.ps1, README.md, LICENSE, version.txt -Destination stage/
+          if (Test-Path servers.ini) { Copy-Item servers.ini -Destination stage/ }
           Compress-Archive -Path stage/* -DestinationPath "DnsManager-v$version.zip" -Force
           Get-ChildItem "DnsManager-v$version.zip"
       - name: Create GitHub Release

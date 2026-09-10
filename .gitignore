@@ -1,6 +1,9 @@
 # Superpowers agent scratch (ledger, briefs, review packages)
 .superpowers/
 
+# Local runtime state — created automatically next to the script on first run
+servers.ini
+
 # Local release dry-run artifacts (real releases are built by CI)
 stage/
 stage-test/
