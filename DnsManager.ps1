@@ -641,6 +641,52 @@ function Show-DnsSpeedTest {
     Pause
 }
 
+function Get-LatestRelease {
+    $url = "https://api.github.com/repos/$RepoOwner/$RepoName/releases/latest"
+    try {
+        $r = Invoke-RestMethod -Uri $url -TimeoutSec 10 -ErrorAction Stop
+        return [PSCustomObject]@{ Tag = "$($r.tag_name)"; HtmlUrl = "$($r.html_url)"; Name = "$($r.name)" }
+    }
+    catch { return $null }
+}
+
+function Test-NewVersionAvailable {
+    param([string]$Current, [string]$Latest)
+    try {
+        $c = [version]($Current.TrimStart('v'))
+        $l = [version]($Latest.TrimStart('v'))
+        return ($l -gt $c)
+    }
+    catch { return $false }
+}
+
+function Show-UpdateCheck {
+    Clear-Host
+    Write-Banner -Title "Check for Updates v$ScriptVersion"
+    Write-Host ""
+    Write-Line "Current version : v$ScriptVersion" -Color Gray
+    Write-Line "Checking GitHub for latest release..." -Color Gray
+    $latest = Get-LatestRelease
+    if ($null -eq $latest) {
+        Write-Line "Could not check for updates (offline or no releases yet)." -Color Yellow
+        Write-Host ""
+        Pause
+        return
+    }
+    Write-Line "Latest version  : $($latest.Tag)" -Color Gray
+    Write-Rule -Color DarkGray
+    if (Test-NewVersionAvailable -Current $ScriptVersion -Latest $latest.Tag) {
+        Write-Line "New version available: $($latest.Tag) (you have v$ScriptVersion)" -Color Green
+        $open = Read-Host "`nOpen release page in browser? (y/n)"
+        if ($open -match '^[yY]') { Start-Process $latest.HtmlUrl }
+    }
+    else {
+        Write-Line "You are up to date." -Color Green
+    }
+    Write-Host ""
+    Pause
+}
+
 # ────────────────────────────────────────────────────────────
 #  Main menu
 # ────────────────────────────────────────────────────────────
@@ -658,6 +704,7 @@ function Show-MainMenu {
         @("4", "Reset DNS to Default"),
         @("5", "Test Connection"),
         @("6", "DNS Speed Test"),
+        @("7", "Check for Updates"),
         @("0", "Exit")
     )
     foreach ($m in $menu) {
@@ -681,6 +728,7 @@ function Show-MainMenu {
         "4" { Reset-DNSToDefault }
         "5" { Test-SiteConnectivity }
         "6" { Show-DnsSpeedTest }
+        "7" { Show-UpdateCheck }
         "0" { break mainMenu }
         default {
             Write-Host "Invalid option." -ForegroundColor Red
