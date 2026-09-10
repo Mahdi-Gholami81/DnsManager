@@ -1,4 +1,4 @@
-$ScriptVersion = "1.1.0"
+$ScriptVersion = "1.1.1"
 $VersionFile = Join-Path $PSScriptRoot "version.txt"
 if (Test-Path $VersionFile) {
     $fileVer = (Get-Content $VersionFile -Raw).Trim()
